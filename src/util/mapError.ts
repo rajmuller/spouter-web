@@ -1,6 +1,6 @@
 import { FieldError } from "../generated/graphql";
 
-const mapError = (errors: FieldError[]) => {
+const mapError = (errors: FieldError[]): Record<string, string> => {
   const errorMap: Record<string, string> = {};
   errors.forEach(({ fields, message }) => {
     fields.forEach((field) => {
