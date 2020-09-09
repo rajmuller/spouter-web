@@ -1,4 +1,4 @@
-import { ThemeProvider, CSSReset, ColorModeProvider } from "@chakra-ui/core";
+import { ChakraProvider } from "@chakra-ui/core";
 import { createClient, Provider } from "urql";
 import { AppProps } from "next/app";
 
@@ -15,13 +15,10 @@ const client = createClient({
 const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
   return (
     <Provider value={client}>
-      <ThemeProvider theme={theme}>
-        <ColorModeProvider value="dark">
-          <CSSReset />
-          <Layout />
-          <Component {...pageProps} />
-        </ColorModeProvider>
-      </ThemeProvider>
+      <ChakraProvider resetCSS theme={theme}>
+        <Layout />
+        <Component {...pageProps} />
+      </ChakraProvider>
     </Provider>
   );
 };

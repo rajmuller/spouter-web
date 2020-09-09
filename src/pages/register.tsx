@@ -43,8 +43,8 @@ export const Register: FC = () => {
             </Box>
             <Button
               type="submit"
-              variant="teal"
-              mt={1}
+              colorScheme="teal"
+              mt={4}
               isLoading={isSubmitting}
             >
               register

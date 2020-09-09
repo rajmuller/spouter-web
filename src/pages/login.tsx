@@ -43,8 +43,8 @@ export const Login: FC = () => {
             </Box>
             <Button
               type="submit"
-              variantColor="teal"
-              mt={1}
+              colorScheme="teal"
+              mt={4}
               isLoading={isSubmitting}
             >
               login

@@ -3,13 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 7777",
     "build": "next build",
     "start": "next start",
     "gen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
-    "@chakra-ui/core": "^0.5.2",
+    "@chakra-ui/core": "next",
     "@emotion/core": "^10.0.27",
     "@emotion/styled": "^10.0.27",
     "emotion-theming": "^10.0.27",
