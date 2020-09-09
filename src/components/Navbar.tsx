@@ -1,13 +1,36 @@
 import { FC } from "react";
-import { Box } from "@chakra-ui/core";
+import NextLink from "next/link";
+import { Link, Flex, Box, Button } from "@chakra-ui/core";
 
-// type NavbarProps = {};
+import { useMeQuery } from "../generated/graphql";
 
 const Navbar: FC = () => {
+  const [{ data, fetching }] = useMeQuery();
+
+  if (fetching) {
+    return null;
+  }
+
+  if (!data?.me) {
+    return (
+      <>
+        <NextLink href="/login">
+          <Link mr={2}>login</Link>
+        </NextLink>
+        <NextLink href="/register">
+          <Link>register</Link>
+        </NextLink>
+      </>
+    );
+  }
+
   return (
-    <Box d="flex" bg="cyan.700">
-      Navbar
-    </Box>
+    <Flex>
+      <Box as="span" mr={2}>
+        Hi {data.me.username}
+      </Box>
+      <Button variant="link">logout</Button>
+    </Flex>
   );
 };
 

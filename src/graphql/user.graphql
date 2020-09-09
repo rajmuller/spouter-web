@@ -1,0 +1,38 @@
+mutation Login($data: UsernamePasswordInput!) {
+  login(data: $data) {
+    errors {
+      fields
+      message
+    }
+    user {
+      id
+      createdAt
+      updatedAt
+      username
+    }
+  }
+}
+
+mutation Register($username: String!, $password: String!) {
+  register(data: { username: $username, password: $password }) {
+    errors {
+      fields
+      message
+    }
+    user {
+      id
+      createdAt
+      updatedAt
+      username
+    }
+  }
+}
+
+query Me {
+  me {
+    id
+    createdAt
+    updatedAt
+    username
+  }
+}
