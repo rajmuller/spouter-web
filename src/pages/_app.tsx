@@ -1,54 +1,21 @@
 import { ChakraProvider } from "@chakra-ui/core";
 import { AppProps } from "next/app";
-import { createClient, Provider, dedupExchange, fetchExchange } from "urql";
-import { cacheExchange, Cache, QueryInput } from "@urql/exchange-graphcache";
 
+import { ApolloProvider } from "@apollo/client";
 import theme from "../theme";
 import { Layout } from "../components";
-import { MeDocument } from "../generated/graphql";
-
-function betterUpdateQuery<Result, Query>(
-  cache: Cache,
-  queryInput: QueryInput,
-  result: any,
-  fn: (r: Result, q: Query) => Query
-) {
-  return cache.updateQuery(
-    queryInput,
-    (data) => fn(result, data as any) as any
-  );
-}
-
-const client = createClient({
-  url: "http://localhost:4000/graphql",
-  fetchOptions: {
-    credentials: "include",
-  },
-  exchanges: [
-    dedupExchange,
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    cacheExchange({
-      updates: {
-        Mutation: {
-          login: () => {
-            cache.updateQuery({ query: MeDocument }, (data) => {});
-          },
-        },
-      },
-    }),
-    fetchExchange,
-  ],
-});
+import { useApollo } from "../graphql/createApollo";
 
 const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
+  const apolloClient = useApollo(pageProps.initialApolloState);
+
   return (
-    <Provider value={client}>
+    <ApolloProvider client={apolloClient}>
       <ChakraProvider resetCSS theme={theme}>
         <Layout />
         <Component {...pageProps} />
       </ChakraProvider>
-    </Provider>
+    </ApolloProvider>
   );
 };
 

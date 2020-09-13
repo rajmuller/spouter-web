@@ -4,26 +4,32 @@ import { Box, Button } from "@chakra-ui/core";
 
 import { useRouter } from "next/router";
 import { Container, InputField } from "../components";
-import { useRegisterMutation } from "../generated/graphql";
+import { useRegisterMutation } from "../graphql/generated";
 import { mapError } from "../util";
 
 export const Register: FC = () => {
-  const [, register] = useRegisterMutation();
+  const [register] = useRegisterMutation();
   const router = useRouter();
+  const onSubmit = async (
+    values: { username: string; password: string },
+    { setErrors }: { setErrors: any }
+  ) => {
+    const res = await register({
+      variables: { data: values },
+    });
+    console.log("res: ", res);
+    if (res.data?.register.errors) {
+      setErrors(mapError(res.data.register.errors));
+    } else if (res.data?.register.user) {
+      await router.push("/");
+    }
+  };
 
   return (
     <Container variant="small">
       <Formik
         initialValues={{ username: "", password: "" }}
-        onSubmit={async (values, { setErrors }) => {
-          const res = await register(values);
-          console.log("res: ", res);
-          if (res.data?.register.errors) {
-            setErrors(mapError(res.data.register.errors));
-          } else if (res.data?.register.user) {
-            await router.push("/");
-          }
-        }}
+        onSubmit={onSubmit}
       >
         {({ isSubmitting }) => (
           <Form>

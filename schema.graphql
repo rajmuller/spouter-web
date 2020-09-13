@@ -14,6 +14,7 @@ type Mutation {
   createPost(title: String!): Post!
   deletePost(id: Float!): Boolean
   login(data: UsernamePasswordInput!): UserResponse!
+  logout: Boolean!
   register(data: UsernamePasswordInput!): UserResponse!
   updatePost(id: Float!, title: String): Post
 }

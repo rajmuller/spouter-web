@@ -4,26 +4,41 @@ import { Box, Button } from "@chakra-ui/core";
 
 import { useRouter } from "next/router";
 import { Container, InputField } from "../components";
-import { useLoginMutation } from "../generated/graphql";
+import { MeDocument, MeQuery, useLoginMutation } from "../graphql/generated";
 import { mapError } from "../util";
 
 export const Login: FC = () => {
-  const [, login] = useLoginMutation();
   const router = useRouter();
+  const [login] = useLoginMutation();
+  const onSubmit = async (
+    values: { username: string; password: string },
+    { setErrors }: { setErrors: any }
+  ) => {
+    const res = await login({
+      variables: { data: values },
+      update: (cache, { data }) => {
+        cache.writeQuery<MeQuery>({
+          query: MeDocument,
+          data: {
+            __typename: "Query",
+            me: data?.login.user,
+          },
+        });
+      },
+    });
+    console.log("res: ", res);
+    if (res.data?.login.errors) {
+      setErrors(mapError(res.data.login.errors));
+    } else if (res.data?.login.user) {
+      await router.push("/");
+    }
+  };
 
   return (
     <Container variant="small">
       <Formik
         initialValues={{ username: "", password: "" }}
-        onSubmit={async (values, { setErrors }) => {
-          const res = await login({ data: values });
-          console.log("res: ", res);
-          if (res.data?.login.errors) {
-            setErrors(mapError(res.data.login.errors));
-          } else if (res.data?.login.user) {
-            await router.push("/");
-          }
-        }}
+        onSubmit={onSubmit}
       >
         {({ isSubmitting }) => (
           <Form>

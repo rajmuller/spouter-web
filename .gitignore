@@ -32,10 +32,9 @@ yarn-error.log*
 
 # vercel
 .vercel
-.idea/.gitignore
-.idea/codeStyles/
-.idea/inspectionProfiles/
-.idea/misc.xml
-.idea/modules.xml
-.idea/spouter-web.iml
-.idea/vcs.xml
+.idea
+
+# graphql-let
+__generated__
+*.graphql.d.ts
+*.graphqls.d.ts

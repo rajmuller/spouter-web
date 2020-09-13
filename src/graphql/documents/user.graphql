@@ -5,34 +5,35 @@ mutation Login($data: UsernamePasswordInput!) {
       message
     }
     user {
-      id
+      ...BaseUser
       createdAt
       updatedAt
-      username
     }
   }
 }
 
-mutation Register($username: String!, $password: String!) {
-  register(data: { username: $username, password: $password }) {
+mutation Register($data: UsernamePasswordInput!) {
+  register(data: $data) {
     errors {
       fields
       message
     }
     user {
-      id
+      ...BaseUser
       createdAt
       updatedAt
-      username
     }
   }
 }
 
+mutation Logout {
+  logout
+}
+
 query Me {
   me {
-    id
+    ...BaseUser
     createdAt
     updatedAt
-    username
   }
 }
