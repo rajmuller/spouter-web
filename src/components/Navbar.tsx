@@ -18,7 +18,7 @@ const Navbar: FC = () => {
     return (
       <>
         <NextLink href="/">
-          <Link>home</Link>
+          <Link mr={2}>home</Link>
         </NextLink>
         <NextLink href="/login">
           <Link mr={2}>login</Link>

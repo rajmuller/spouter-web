@@ -38,6 +38,7 @@ export type User = {
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
   username: Scalars['String'];
+  email: Scalars['String'];
 };
 
 export type Mutation = {
@@ -48,6 +49,7 @@ export type Mutation = {
   register: UserResponse;
   login: UserResponse;
   logout: Scalars['Boolean'];
+  forgotPassword: Scalars['Boolean'];
 };
 
 
@@ -68,12 +70,18 @@ export type MutationDeletePostArgs = {
 
 
 export type MutationRegisterArgs = {
-  data: UsernamePasswordInput;
+  data: Credentials;
 };
 
 
 export type MutationLoginArgs = {
-  data: UsernamePasswordInput;
+  password: Scalars['String'];
+  usernameOrEmail: Scalars['String'];
+};
+
+
+export type MutationForgotPasswordArgs = {
+  email: Scalars['String'];
 };
 
 export type UserResponse = {
@@ -88,8 +96,9 @@ export type FieldError = {
   message: Scalars['String'];
 };
 
-export type UsernamePasswordInput = {
+export type Credentials = {
   username: Scalars['String'];
+  email: Scalars['String'];
   password: Scalars['String'];
 };
 
@@ -105,7 +114,8 @@ export type PostsQuery = (
 );
 
 export type LoginMutationVariables = Exact<{
-  data: UsernamePasswordInput;
+  usernameOrEmail: Scalars['String'];
+  password: Scalars['String'];
 }>;
 
 
@@ -125,7 +135,7 @@ export type LoginMutation = (
 );
 
 export type RegisterMutationVariables = Exact<{
-  data: UsernamePasswordInput;
+  data: Credentials;
 }>;
 
 
@@ -211,8 +221,8 @@ export type PostsQueryHookResult = ReturnType<typeof usePostsQuery>;
 export type PostsLazyQueryHookResult = ReturnType<typeof usePostsLazyQuery>;
 export type PostsQueryResult = Apollo.QueryResult<PostsQuery, PostsQueryVariables>;
 export const LoginDocument = gql`
-    mutation Login($data: UsernamePasswordInput!) {
-  login(data: $data) {
+    mutation Login($usernameOrEmail: String!, $password: String!) {
+  login(usernameOrEmail: $usernameOrEmail, password: $password) {
     errors {
       fields
       message
@@ -240,7 +250,8 @@ export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutati
  * @example
  * const [loginMutation, { data, loading, error }] = useLoginMutation({
  *   variables: {
- *      data: // value for 'data'
+ *      usernameOrEmail: // value for 'usernameOrEmail'
+ *      password: // value for 'password'
  *   },
  * });
  */
@@ -251,7 +262,7 @@ export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
 export const RegisterDocument = gql`
-    mutation Register($data: UsernamePasswordInput!) {
+    mutation Register($data: Credentials!) {
   register(data: $data) {
     errors {
       fields

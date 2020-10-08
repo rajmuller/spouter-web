@@ -1,19 +1,36 @@
 import { Box } from "@chakra-ui/core";
 
-import { usePostsQuery } from "../graphql/generated";
+import { PostsDocument, usePostsQuery } from "../graphql/generated";
+import { initializeApollo } from "../graphql/createApollo";
 
 const Index = () => {
   const { data } = usePostsQuery();
-  console.log("data: ", data);
   return (
     <>
       <div>hello next</div>
       <br />
-      {!data
-        ? null
-        : data.posts.map((post) => <Box key={post.id}>{post.title}</Box>)}
+      {!data ? (
+        <div>loading...</div>
+      ) : (
+        data.posts.map((post) => <Box key={post.id}>{post.title}</Box>)
+      )}
     </>
   );
+};
+
+export const getStaticProps = async () => {
+  const apolloClient = initializeApollo();
+
+  await apolloClient.query({
+    query: PostsDocument,
+  });
+
+  return {
+    props: {
+      initialApolloState: apolloClient.cache.extract(),
+    },
+    revalidate: 1,
+  };
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -1,2 +1,2 @@
 // eslint-disable-next-line import/prefer-default-export
-export { meAfterLogin, meAfterLogout } from "./user";
+export { meAfterLogin } from "./user";

@@ -1,5 +1,5 @@
-mutation Login($data: UsernamePasswordInput!) {
-  login(data: $data) {
+mutation Login($usernameOrEmail: String!, $password: String!) {
+  login(usernameOrEmail: $usernameOrEmail, password: $password) {
     errors {
       fields
       message
@@ -12,7 +12,7 @@ mutation Login($data: UsernamePasswordInput!) {
   }
 }
 
-mutation Register($data: UsernamePasswordInput!) {
+mutation Register($data: Credentials!) {
   register(data: $data) {
     errors {
       fields

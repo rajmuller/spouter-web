@@ -11,7 +11,7 @@ export const Register: FC = () => {
   const [register] = useRegisterMutation();
   const router = useRouter();
   const onSubmit = async (
-    values: { username: string; password: string },
+    values: { username: string; password: string; email: string },
     { setErrors }: { setErrors: any }
   ) => {
     const res = await register({
@@ -28,7 +28,7 @@ export const Register: FC = () => {
   return (
     <Container variant="small">
       <Formik
-        initialValues={{ username: "", password: "" }}
+        initialValues={{ username: "", email: "", password: "" }}
         onSubmit={onSubmit}
       >
         {({ isSubmitting }) => (
@@ -39,6 +39,14 @@ export const Register: FC = () => {
               label="Username"
               type="text"
             />
+            <Box mt={4}>
+              <InputField
+                name="email"
+                placeholder="email"
+                label="Email"
+                type="text"
+              />
+            </Box>
             <Box mt={4}>
               <InputField
                 name="password"

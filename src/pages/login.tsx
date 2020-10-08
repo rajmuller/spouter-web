@@ -4,32 +4,25 @@ import { Box, Button } from "@chakra-ui/core";
 
 import { useRouter } from "next/router";
 import { Container, InputField } from "../components";
-import { MeDocument, MeQuery, useLoginMutation } from "../graphql/generated";
+import { useLoginMutation } from "../graphql/generated";
+import { meAfterLogin } from "../graphql/cacheUpdates";
 import { mapError } from "../util";
 
 export const Login: FC = () => {
   const router = useRouter();
   const [login] = useLoginMutation();
   const onSubmit = async (
-    values: { username: string; password: string },
+    values: { usernameOrEmail: string; password: string },
     { setErrors }: { setErrors: any }
   ) => {
-    const res = await login({
-      variables: { data: values },
-      update: (cache, { data }) => {
-        cache.writeQuery<MeQuery>({
-          query: MeDocument,
-          data: {
-            __typename: "Query",
-            me: data?.login.user,
-          },
-        });
-      },
+    const response = await login({
+      variables: values,
+      update: meAfterLogin,
     });
-    console.log("res: ", res);
-    if (res.data?.login.errors) {
-      setErrors(mapError(res.data.login.errors));
-    } else if (res.data?.login.user) {
+    console.log("res: ", response);
+    if (response.data?.login.errors) {
+      setErrors(mapError(response.data.login.errors));
+    } else if (response.data?.login.user) {
       await router.push("/");
     }
   };
@@ -37,15 +30,15 @@ export const Login: FC = () => {
   return (
     <Container variant="small">
       <Formik
-        initialValues={{ username: "", password: "" }}
+        initialValues={{ usernameOrEmail: "", password: "" }}
         onSubmit={onSubmit}
       >
         {({ isSubmitting }) => (
           <Form>
             <InputField
-              name="username"
-              placeholder="username"
-              label="Username"
+              name="usernameOrEmail"
+              placeholder="username or email"
+              label="Username or Email"
               type="text"
             />
             <Box mt={4}>
