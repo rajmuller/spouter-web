@@ -14,13 +14,13 @@ export const Register: FC = () => {
     values: { username: string; password: string; email: string },
     { setErrors }: { setErrors: any }
   ) => {
-    const res = await register({
+    const response = await register({
       variables: { data: values },
     });
-    console.log("res: ", res);
-    if (res.data?.register.errors) {
-      setErrors(mapError(res.data.register.errors));
-    } else if (res.data?.register.user) {
+    console.log("response: ", response);
+    if (response.data?.register.errors) {
+      setErrors(mapError(response.data.register.errors));
+    } else if (response.data?.register.user) {
       await router.push("/");
     }
   };
@@ -33,13 +33,15 @@ export const Register: FC = () => {
       >
         {({ isSubmitting }) => (
           <Form>
-            <InputField
-              name="username"
-              placeholder="username"
-              label="Username"
-              type="text"
-            />
-            <Box mt={4}>
+            <Box mb={4}>
+              <InputField
+                name="username"
+                placeholder="username"
+                label="Username"
+                type="text"
+              />
+            </Box>
+            <Box mb={4}>
               <InputField
                 name="email"
                 placeholder="email"
@@ -47,14 +49,12 @@ export const Register: FC = () => {
                 type="text"
               />
             </Box>
-            <Box mt={4}>
-              <InputField
-                name="password"
-                placeholder="password"
-                label="Password"
-                type="password"
-              />
-            </Box>
+            <InputField
+              name="password"
+              placeholder="password"
+              label="Password"
+              type="password"
+            />
             <Button
               type="submit"
               colorScheme="teal"
